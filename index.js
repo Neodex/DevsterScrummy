@@ -26,7 +26,7 @@
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-// comment
+
 var socket = io.connect('http://neventy.fr:8080');
 
 socket.emit("getServerKey", {}, function (data)
