@@ -27,7 +27,7 @@
 
 */
 
-var socket = io.connect('http://neventy.fr:8080');
+var socket = io.connect('http://bilal.panchbhaya.scrummy.jit.su:8080');
 
 socket.emit("getServerKey", {}, function (data)
 {

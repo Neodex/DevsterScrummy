@@ -395,7 +395,7 @@ io.sockets.on('connection', function(socket)
         });
 
         socket.broadcast.emit("tacheMoved", data);
-        socket.emit("tacheModified", data);
+        socket.emit("tacheMoved", data);
     });
 
 
