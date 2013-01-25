@@ -29,7 +29,7 @@
 
 
 
-var socket = io.connect('http://bilal.panchbhaya.scrummy.jit.su:8080');
+var socket = io.connect('http://bilal.panchbhaya.scrummy.jit.su');
 var serverKey = "joy";
 
 socket.emit("getServerKey", {}, function (data)
