@@ -122,9 +122,9 @@ $(document).ready(function ()
 		if (data.project == projectInView)
 		{
 			var tache = $("#" + data.tacheId);
-
-			$("#" + data.oStory + " .progStory").html(data.oldStoryAv);
-			$("#" + data.nStory + " .progStory").html(data.newStoryAv);
+            
+            //var oldStory = tache.parent().parent().attr('id');
+			//var oldState = tache.parent().attr("data-state");
 
 			tache.remove();
 
@@ -136,6 +136,12 @@ $(document).ready(function ()
 			{
 				$("#noStory td").append(tache);
 			}
+            
+            var oldStoryAv = getStoryAvancement(data.oStory);
+    		var newStoryAv = getStoryAvancement(data.nStory);
+
+			$("#" + data.oStory + " .progStory").html(oldStoryAv);
+			$("#" + data.nStory + " .progStory").html(newStoryAv);
 		}
 	});
 

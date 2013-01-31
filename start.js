@@ -77,7 +77,7 @@ var server = http.createServer(function(request, response)
 
     if (filePath == './')
     {
-        filePath = './index.html';
+        filePath = './login.html';
     }
 
     var contentType = getContentType(request.url);
@@ -129,14 +129,14 @@ io.configure(function()
 
 /////////////BDD
 
-    db.getUserModel().remove(null, function (err) {if (err) { throw err; }});
+    /*db.getUserModel().remove(null, function (err) {if (err) { throw err; }});
     db.getProjetModel().remove(null, function (err) {if (err) { throw err; }});
     db.getStoryModel().remove(null, function (err) {if (err) { throw err; }});
     db.getTacheModel().remove(null, function (err) {if (err) { throw err; }});
-    db.getNotifModel().remove(null, function (err) {if (err) { throw err; }});
+    db.getNotifModel().remove(null, function (err) {if (err) { throw err; }});*/
 
-    db.addUser("user1", "jeremie", "skate");
-    db.addUser("user2", "callum", "callum");
+    //db.addUser("user1", "user", "user");
+    /*db.addUser("user2", "callum", "callum");
     db.addUser("user3", "nico", "nico");
     db.addUser("user4", "bilal", "bilal");
 
@@ -163,7 +163,7 @@ io.configure(function()
     db.addTache("t5", "s3", "tache5", "jeje", 0);
     db.addTache("t6", "s3", "tache6", "jeje", 3);
     db.addTache("t7", "s4", "tache7", "aze", 1);
-    db.addTache("t8", "s4", "tache8", "aze", 0);
+    db.addTache("t8", "s4", "tache8", "aze", 0);*/
 
 ///////////////FIN BDD
 
