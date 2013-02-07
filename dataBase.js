@@ -27,9 +27,6 @@
 
 */
 
-///////////////TEST GITHB
-
-
 var mongoose = require('mongoose');
 var Projet, Story, Tache;
 
