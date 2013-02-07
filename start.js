@@ -105,7 +105,7 @@ var server = http.createServer(function(request, response)
         else
         {
             response.writeHead(404);
-            response.end();
+            response.end("heheheheheh");
         }
     });
 
