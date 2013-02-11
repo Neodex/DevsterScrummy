@@ -33,7 +33,7 @@
 var mongoose = require('mongoose');
 var Projet, Story, Tache;
 
-mongoose.connect('mongodb://Devster:GhBvFtY@ds037007.mongolab.com:37007/devster_scrummy', function (err)
+mongoose.connect('mongodb://localhost:27017/devster_scrummy', function (err)
 {
     if (err) {
         throw err;

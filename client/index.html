@@ -1,0 +1,144 @@
+<!--
+
+* Copyright (c) 2012, Goujon Jeremie, Neventy
+* All rights reserved.
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions are met:
+*
+*     * Redistributions of source code must retain the above copyright
+*       notice, this list of conditions and the following disclaimer.
+*     * Redistributions in binary form must reproduce the above copyright
+*       notice, this list of conditions and the following disclaimer in the
+*       documentation and/or other materials provided with the distribution.
+*     * Neither the name of the University of California, Berkeley nor the
+*       names of its contributors may be used to endorse or promote products
+*       derived from this software without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND ANY
+* EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+* WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL THE REGENTS AND CONTRIBUTORS BE LIABLE FOR ANY
+* DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+-->
+
+
+<html>
+<head>
+	<title>Scrumy Devster</title>
+	<link href="index.css" rel="stylesheet" type="text/css">
+	<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+<div id="bodyContent">
+	<input id="logoutButton" type="button" value="Logout"> 
+	<input id="viewListProjectButton" type="button" value="Voir la liste des projets" style="display: none;"><br/>
+
+	<div class="title">Scrumy Devster</div>
+
+	<div id="projectSelectDiv">
+	    <h1>Projet</h1>
+	    <fieldset>
+	        <div class="form" action="#" method="post">
+	            <table id="projectList">
+				</table>
+				<span id="plusProjectButton"><img class="imgBut" src="img/Plus.png"></span>
+	        </div>
+	    </fieldset>
+	</div>
+
+	<div id="projectViewDiv">
+
+		<div id="viewHistorique">Ouvrir l'historique</div>
+
+		<h1 id="projectTitle"></h1>
+
+		<table id="noStoryTab">
+			<tr id="noStory">
+				<th width="150px" class="descStory"><span class="nomStory">No Story Zone</span></th> <th class="addButton addTacheButton" width="30px">+</th> <td></td>
+			</tr>
+		</table>
+		<br/>
+		<table id="scrumTab">
+			<tr id="entete">
+				<th>Story</th> <th width="30px"></th> <th>To Do</th> <th>In Progress</th> <th>Verify</th> <th>Done</th>
+			</tr>
+			<tfoot>
+				<th colspan="6" class="addButton"  height="40px" id="newStoryButton" >+</th>
+			</tfoot>	
+		</table>
+		<br/>
+
+		
+
+		<div class="freePopUp" id="newTacheDiv">
+			Description : <br/><textarea id="descTacheInput" rows="5" cols="30"></textarea><br/>
+			Proprietaire : <input id="propTacheInput" type="text"></input> <br/>
+			<input id="creeTacheButton" type="button" value="Cr&eacute;er">
+			<input id="cancelTacheButton" type="button" value="Annuler">
+		</div>
+
+		<div class="freePopUp" id="newStoryDiv">
+			Nom : <input id="nomStoryInput" type="text"></input> <br/>
+			DeadLine : <input id="deadLineBox" type="checkbox" checked="checked"> <br/>
+			<div id="dateSelectDiv">
+				Date de d&eacute;but : <input id="startDateStoryInput" type="date"></input> <br/>
+				Date de fin : <input id="endDateStoryInput" type="date"></input> <br/>
+			</div>
+			<input id="creeStoryButton" type="button" value="Cr&eacute;er">
+			<input id="cancelStoryButton" type="button" value="Annuler">
+		</div>
+
+		<div class="freePopUp" id="modifTacheDiv">
+			Description : <br/><textarea id="nDescTacheInput" rows="5" cols="30"></textarea><br/>
+			Proprietaire : <input id="nPropTacheInput" type="text"></input> <br/>
+			<input id="modifTacheButton" type="button" value="Modifier">
+			<input id="cancelModifTacheButton" type="button" value="Annuler">
+		</div>
+
+		<div class="freePopUp" id="modifStoryDiv">
+			Nom : <input id="nNomStoryInput" type="text"></input> <br/>
+			DeadLine : <input id="nDeadLineBox" type="checkbox" checked="checked"> <br/>
+			<div id="nDateSelectDiv">
+				Date de d&eacute;but : <input id="nStartDateStoryInput" type="date"></input> <br/>
+				Date de fin : <input id="nEndDateStoryInput" type="date"></input> <br/>
+			</div>
+			<input id="modifStoryButton" type="button" value="Modifier">
+			<input id="cancelModifStoryButton" type="button" value="Annuler">
+			
+		</div>
+
+		
+		
+	</div>
+
+	<div class="freePopUp" id="newProjectDiv">
+		----- Nouveau projet -----<br>
+		Nom : <input id="newProjectInput" type="text"></input>
+		<input id="newProjectButton" type="button" value="Cr&eacute;er">
+		<input id="cancelProjetButton" type="button" value="Annuler">
+	</div>
+
+	<div class="freePopUp" id="modifProjectDiv">
+		Nom : <input id="nNomProjectInput" type="text"></input> <br/>
+		Etat : <select id="nStateProjectSelect"><option value="To Do">To Do</option><option value="In Progress">In Progress</option><option value="Done">Done</option></select> <br/>
+		<input id="modifProjectButton" type="button" value="Modifier">
+		<input id="cancelModifProjectButton" type="button" value="Annuler">
+	</div>
+
+</div>
+<div id="menuContent">
+	<h3>Historique</h3>
+	<hr>
+	<div id="notifContainer"></div>
+</div>
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="index.js"></script>
+</body>
+</html>

@@ -73,11 +73,12 @@ var getContentType = function(InUrl)
 
 var server = http.createServer(function(request, response)
 {
-    var filePath = '.' + url.parse(request.url).pathname;
+    var filePath = './client' +url.resolve( url.parse(request.url).pathname,"");
+    console.log("filePath : "+filePath);
 
-    if (filePath == './')
+    if (filePath == './client/')
     {
-        filePath = './login.html';
+        filePath = './client/login.html';
     }
 
     var contentType = getContentType(request.url);
@@ -105,11 +106,11 @@ var server = http.createServer(function(request, response)
         else
         {
             response.writeHead(404);
-            response.end("heheheheheh");
+            response.end();
         }
     });
 
-}).listen(process.env.PORT);
+}).listen(8085);
 
 var io = require("socket.io").listen(server);
 
