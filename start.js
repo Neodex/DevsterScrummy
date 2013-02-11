@@ -394,7 +394,9 @@ io.sockets.on('connection', function(socket)
                 console.log("error storyModel");
             }
         });
-
+/*         var sleep = require('sleep');
+          sleep.sleep(3);//sleep for 5 seconds
+          console.log("sleep");*/
         socket.broadcast.emit("tacheMoved", data);
         socket.emit("tacheMoved", data);
     });

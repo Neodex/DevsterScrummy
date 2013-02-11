@@ -120,12 +120,13 @@ $(document).ready(function ()
 		}
 	});
 
-	socket.on("tacheMoved", function (data)
+	var MoveTache =  function (data)
 	{
+
 		if (data.project == projectInView)
 		{
-			var tache = $("#" + data.tacheId);
-            
+			var tache = $("#" + data.tacheId);  
+
             //var oldStory = tache.parent().parent().attr('id');
 			//var oldState = tache.parent().attr("data-state");
 
@@ -146,7 +147,22 @@ $(document).ready(function ()
 			$("#" + data.oStory + " .progStory").html(oldStoryAv);
 			$("#" + data.nStory + " .progStory").html(newStoryAv);
 		}
+	};
+	socket.on("tacheMoved",function(data){
+		//On ne déplace la tâche que si besoin est
+		var tache = $("#" + data.tacheId);  
+		if (data.nStory != "noStory")
+			{
+			    if($(tache).parent()[0] != $("#" + data.nStory).children().eq(parseInt(data.nState) + 2))
+				 MoveTache(data);
+			}
+			else
+			{
+				if($(tache).parent()[0] != $("#noStory td"))
+			 	MoveTache(data);
+			}
 	});
+
 
 	socket.on("tacheDeleted", function (data)
 	{
@@ -271,6 +287,7 @@ $(document).ready(function ()
 					//$("#" + $(targetCell).parent().attr('id') + " .progStory").html(newStoryAv);
 
 					socket.emit("movingTache", {"project": projectInView, "tacheId": $(selectedTache).attr("id"), "oStory": oldStory, "nStory": $(targetCell).parent().attr('id'), "nState": $(targetCell).attr("data-state"), "oldStoryAv": oldStoryAv, "newStoryAv": newStoryAv});
+					 MoveTache({"project": projectInView, "tacheId": $(selectedTache).attr("id"), "oStory": oldStory, "nStory": $(targetCell).parent().attr('id'), "nState": $(targetCell).attr("data-state"), "oldStoryAv": oldStoryAv, "newStoryAv": newStoryAv});
 				}
 			}
 			else
