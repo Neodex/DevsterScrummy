@@ -221,9 +221,8 @@ io.sockets.on('connection', function(socket)
                 return callbackFunc.apply(callBackContext,Array.prototype.slice.call(callBackArgs));
             },function(){
                  console.log(eventKey + ""+callBackArgs);
-                 console.log("vous n'êtes pas logué !");
-                 
-               //  socket.emit("InvalidSession",{msg: "la session a expirée"});
+                 console.log("vous n'êtes pas logué !");  
+                 socket.emit("InvalidSession",{msg: "la session a expirée"});
             });
 
            

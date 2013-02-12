@@ -67,7 +67,6 @@ $(document).ready(function ()
 			{
 			 	setCookie("scrumyDevsterName", $("#loginInput").val());
 		 		setCookie("session",data.session);		
-                alert("session cookie : "+data.session);
 				window.location = "index.html";
 			}
 			else
