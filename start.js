@@ -37,9 +37,7 @@ var db = require("./dataBase");
 
 var tabEtat = ["To Do", "In Progress", "Verify", "Done"];
 
-var serverKey = Math.random() * 999999999999 + "-" + Math.random() * 999999999999 + "-" + Math.random() * 999999999999;
-
-console.log("key: " + serverKey);
+ 
 
 var getContentType = function(InUrl)
 {
@@ -231,14 +229,6 @@ io.sockets.on('connection', function(socket)
         return onFunc.apply(this,Array.prototype.slice.call(arguments));
      
     };
-
-
-
-
-    socket.on('getServerKey', function(data, cb)
-    {
-        cb({"serverKey": serverKey});
-    });
 
     socket.on('callLogin', function(data, cb)
     {
