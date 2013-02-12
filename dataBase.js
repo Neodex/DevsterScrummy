@@ -78,11 +78,17 @@ Notif = mongoose.Schema({
     content: String
 });
 
+Session = mongoose.Schema({
+    guid : String,
+    user_id : mongoose.Schema.ObjectId
+});
+
 userModel = mongoose.model('userModel', User);
 projetModel = mongoose.model('projetModel', Projet);
 storyModel = mongoose.model('storyModel', Story);
 tacheModel = mongoose.model('tacheModel', Tache);
 notifModel = mongoose.model('notifModel', Notif);
+sessionModel = mongoose.model('sessionModel',Session);
 
 var addUser = function (id, nom, password)
 {
@@ -182,7 +188,7 @@ var searchMongo = function (model, condArray, callback)
 
     for (var i = 0; i < condArray.length; i++)
     {
-        query.where(condArray[i].attribut, condArray[i].valeur);
+        query.where(condArray[i].attribut, condArray[i].valeur.toString());
     }
 
     query.exec(function (err, res)
@@ -211,9 +217,75 @@ exports.getTacheModel = function () {
 exports.getNotifModel = function () {
     return notifModel;
 };
+
+exports.getSessionModel = function () {
+   return sessionModel;
+}
+
+
+
+var deleteSessionById = function(guid,callback)
+{
+ 
+sessionModel.findOne({guid : guid.toString()},function(err,doc)
+    {
+        doc.remove();
+        console.log(doc);
+        console.log("Session removed : "+guid);
+        if(typeof(callback) === 'function')
+            callback();
+    });
+};
+
+var deleteSessionByUserId = function(user_id,callback)
+{
+   sessionModel.find({user_id : user_id.toString()},function(err,docs){
+        for(var i in docs)
+        {
+            doc = docs[i];
+            doc.remove();
+            console.log("Session for user "+user_id+ " removed !");
+        }
+
+        if(typeof(callback) === 'function')
+            callback();
+   });
+}
+
+var createSession = function(user_id,guid,callback)
+{
+ 
+    //console.log("Dans create session, user_id :"+user_id);
+    //var meinId = mongoose.Types.ObjectId(user_id)+'';
+
+    deleteSessionByUserId(user_id,function(){
+
+        var meinId =  mongoose.Types.ObjectId(user_id.toString());
+        var session = new sessionModel({
+            user_id: meinId,
+            guid: guid
+        });
+
+        session.save(function error (err) {
+        if(err)
+            throw err;
+        if(typeof (callback)==='function')
+         callback();
+        });
+
+    })
+
+  
+
+
+}
+
 exports.addUser = addUser;
 exports.addProjet = addProjet;
 exports.addStory = addStory;
 exports.addTache = addTache;
 exports.addNotif = addNotif;
 exports.searchMongo = searchMongo;
+exports.createSession = createSession;
+exports.deleteSessionById = deleteSessionById;
+exports.deleteSessionByUserId = deleteSessionByUserId;

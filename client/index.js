@@ -31,44 +31,8 @@
 /////// TEST GITHUB
 
 var socket = io.connect('http://localhost:8085');
+	
 
-socket.emit("getServerKey", {}, function (data)
-{
-	if ((getCookie("scrumyDevster") != "ok" && getCookie("scrumyDevster") != "remindMe") || data.serverKey != getCookie("scrumyDevsterKey"))
-	{
-		window.location = "login.html";
-	}
-	else
-	{
-		if (getCookie("scrumyDevster") == "remindMe")
-		{
-			var t = new Date();
-			t.setTime(t.getTime() + 24 * 3600 * 1000 * 300);
-
-			setCookie("scrumyDevster", "remindMe", t);
-			setCookie("scrumyDevsterName", getCookie("scrumyDevsterName"));
-		}
-
-		$(document).ready(function ()
-		{
-			$("#menuContent").css("left", parseInt($(document).width())/* - parseInt($("#menuContent").width()) - 10*/);
-			$("#notifContainer").height(parseInt($(document).height()) - (parseInt($("#menuContent hr").offset().top) + parseInt($("#menuContent hr").css("margin-bottom"))) - 5);
-
-			$("#menuContent").css("display", "none");
-			$("#bodyContent").css("width", "100%");
-
-			$("#viewHistorique").css("left", $(window).width() - parseInt($("#viewHistorique").width()) - 27);
-
-			socket.emit("getInitialData", {user: getCookie("scrumyDevsterName")}, function (data)
-			{
-				data.projects.forEach(function(project)
-				{
-					$("#projectList").append("<tr id='" + project.id + "'><td class='projectNameCol'>" + project.nom + "</td><td class='projectStateCol'>" + project.state + "</td><td><img class='voirProjectButton imgBut' src='img/voir.png'><img class='suppProjectButton imgBut' src='img/effacer.png'><img class='modifProjectButton imgBut' src='img/reglage.png'></td></tr>");
-				});
-			});
-		});
-	}
-});
 
 var projectInView = "";
 var mousePos = {
@@ -90,6 +54,25 @@ $(document).ready(function ()
 //																											 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+	if(getCookie("session") == "null")
+	{
+		window.location = "login.html";
+	}
+
+	var emitFunc = socket.emit;
+	socket.emit = function()
+	{
+		var dataSent = arguments[1];
+		dataSent.session = getCookie("session");
+ 		return emitFunc.apply(this,Array.prototype.slice.call(arguments));
+	};
+
+
+	socket.on("InvalidSession", function (data)
+	{
+		setCookie("session","null");
+		window.location = "login.html";
+	});
 
 	socket.on("newNotif", function (data)
 	{
@@ -255,6 +238,28 @@ $(document).ready(function ()
 //																											 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+$(document).ready(function ()
+{
+	$("#menuContent").css("left", parseInt($(document).width())/* - parseInt($("#menuContent").width()) - 10*/);
+	$("#notifContainer").height(parseInt($(document).height()) - (parseInt($("#menuContent hr").offset().top) + parseInt($("#menuContent hr").css("margin-bottom"))) - 5);
+
+	$("#menuContent").css("display", "none");
+	$("#bodyContent").css("width", "100%");
+
+	$("#viewHistorique").css("left", $(window).width() - parseInt($("#viewHistorique").width()) - 27);
+
+	socket.emit("getInitialData", {user: getCookie("scrumyDevsterName")}, function (data)
+	{
+		data.projects.forEach(function(project)
+		{
+			$("#projectList").append("<tr id='" + project.id + "'><td class='projectNameCol'>" + project.nom + "</td><td class='projectStateCol'>" + project.state + "</td><td><img class='voirProjectButton imgBut' src='img/voir.png'><img class='suppProjectButton imgBut' src='img/effacer.png'><img class='modifProjectButton imgBut' src='img/reglage.png'></td></tr>");
+		});
+	});
+});
+
+
+
+
 	$(document).mousemove(function(e)
 	{
 		mousePos.x = e.pageX;
@@ -317,8 +322,10 @@ $(document).ready(function ()
 
 	$(document).on("click", "#logoutButton", function ()
 	{
+		socket.emit("LogOut",{session: getCookie("session")});
+		setCookie("session","null");
 		setCookie("scrumyDevster", "null");
-
+	
 		window.location = "login.html";
 	});
 

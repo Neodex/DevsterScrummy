@@ -71,10 +71,11 @@ var getContentType = function(InUrl)
     return contentType;
 };
 
+
 var server = http.createServer(function(request, response)
 {
     var filePath = './client' +url.resolve( url.parse(request.url).pathname,"");
-    console.log("filePath : "+filePath);
+    //console.log("filePath : "+filePath);
 
     if (filePath == './client/')
     {
@@ -174,6 +175,67 @@ io.sockets.on('connection', function(socket)
 
     console.log('Socket Connection ! ');
 
+    function checkSession(guid,CB_Logged,CB_notLogged)
+    {
+        if(guid != undefined)
+        {
+            db.searchMongo(db.getSessionModel(),[{attribut: "guid", valeur: guid}], function(rep){
+                
+            if(rep.length>0)
+               {
+                 CB_Logged(rep);
+               } 
+               else
+                CB_notLogged();
+
+            });
+        }
+        else
+            CB_notLogged();
+    }
+
+
+
+ 
+
+      var onFunc = socket.on;
+    socket.on = function ( ) {
+        var eventKey = arguments[0];
+           
+        var callbackFunc = arguments[1];
+
+        if(eventKey == "callLogin")
+             return onFunc.apply(this,Array.prototype.slice.call(arguments));
+
+        arguments[1] = function()
+        {
+            var callBackContext = this;
+            var callBackArgs = arguments;
+            var dataSentByClient = callBackArgs[0];
+            //console.log(dataSentByClient);
+            
+            checkSession(dataSentByClient.session,function(){
+               /* console.log("vous êtes logué");
+                console.log("session : "+dataSentByClient.session);*/
+
+                return callbackFunc.apply(callBackContext,Array.prototype.slice.call(callBackArgs));
+            },function(){
+                 console.log(eventKey + ""+callBackArgs);
+                 console.log("vous n'êtes pas logué !");
+                 
+               //  socket.emit("InvalidSession",{msg: "la session a expirée"});
+            });
+
+           
+        };
+       
+        return onFunc.apply(this,Array.prototype.slice.call(arguments));
+     
+    };
+
+
+
+
     socket.on('getServerKey', function(data, cb)
     {
         cb({"serverKey": serverKey});
@@ -185,7 +247,9 @@ io.sockets.on('connection', function(socket)
         {
             if (rep.length > 0)
             {
-                cb({ok: true});
+                var sessionId = Math.random() * 999999999999 + "-" + Math.random() * 999999999999 + "-" + Math.random() * 999999999999;
+                db.createSession(rep[0]._id,sessionId);
+                cb({ok: true,session:sessionId});
             }
             else
             {
@@ -193,6 +257,11 @@ io.sockets.on('connection', function(socket)
             }
         });
     });
+
+    socket.on('LogOut',function(data)
+        {
+            db.deleteSessionById(data.session);
+        });
 
     socket.on('searchNotif', function (data, cb)
     {

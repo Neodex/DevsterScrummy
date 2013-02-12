@@ -39,21 +39,6 @@ socket.emit("getServerKey", {}, function (data)
 
 $(document).ready(function ()
 {
-	if ((getCookie("scrumyDevster") == "ok" || getCookie("scrumyDevster") == "remindMe") && getCookie("scrumyDevsterKey") == serverKey)
-	{
-		if (getCookie("scrumyDevster") == "remindMe")
-		{
-			var t = new Date();
-			t.setTime(t.getTime() + 24 * 3600 * 1000 * 300);
-
-			setCookie("scrumyDevster", "remindMe", t);
-			setCookie("scrumyDevsterKey", serverKey, t);
-			setCookie("scrumyDevsterName", getCookie("scrumyDevsterName"));
-		}
-
-		window.location = "index.html";
-	}
-
 	$(document).on("click", "#loginButton", function (event)
 	{
 		event.preventDefault();
@@ -80,28 +65,18 @@ $(document).ready(function ()
 
 			if (data.ok)
 			{
-				var t = new Date();
-				t.setTime(t.getTime() + 24 * 3600 * 1000 * 300);
-
-				if ($("#remindMe").attr('checked'))
-				{
-					setCookie("scrumyDevster", "remindMe", t);
-				}
-				else
-				{
-					setCookie("scrumyDevster", "ok");
-				}
-
-				setCookie("scrumyDevsterName", $("#loginInput").val(), t);
-				setCookie("scrumyDevsterKey", serverKey, t);
-				
+			 	setCookie("scrumyDevsterName", $("#loginInput").val());
+		 		setCookie("session",data.session);		
+                alert("session cookie : "+data.session);
 				window.location = "index.html";
 			}
 			else
 			{
 				alert("WRONG!!");
 			}
-		});
+		}); //Fin de socket.emit
+
+
 	});
 });
 
